@@ -3,6 +3,7 @@ cobra==0.32.1
 imatpy==0.3.0
 pandas
 numpy
+scipy
 matplotlib
 pyscipopt==6.3.0
 requests
