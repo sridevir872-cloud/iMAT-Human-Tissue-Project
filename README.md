@@ -2,163 +2,113 @@
 
 ## 1. Project Overview
 
-In this project, I studied how gene expression data can be used to understand the metabolic activities of the human liver.
+This project focuses on predicting human liver-specific metabolic activity by combining gene-expression data with a genome-scale metabolic model.
 
-Different tissues in our body perform different functions. Because of this, their metabolic activities are also different. The main idea of this project is to use gene-expression information to predict which metabolic reactions may be active or inactive in the liver.
-
-For this, I used the iMAT method along with the GTEx gene-expression dataset and the Human-GEM metabolic model.
-
-I also compared two different expression thresholds, 10% and 15%, to see how changing the threshold affects the predicted results.
+The **iMAT (Integrative Metabolic Analysis Tool)** method is used to integrate gene-expression information into a metabolic network and predict which metabolic reactions are likely to be active or inactive.
 
 ## 2. Research Question
 
-Can gene-expression information from human liver tissue be combined with a genome-scale metabolic network using iMAT to predict metabolic activity?
+Can gene-expression information from human liver tissue be integrated with a genome-scale metabolic network using iMAT to predict tissue-specific metabolic activity?
 
-## 3. Objectives
+## 3. Dataset and Tools
 
-- To use human liver gene-expression data for metabolic modelling.
-- To connect gene-expression information with metabolic reactions.
-- To use iMAT to predict the activity of metabolic reactions.
-- To compare the results obtained using 10% and 15% thresholds.
-- To understand how changing the threshold affects the predicted metabolic fluxes.
-- To study which metabolic subsystems show changes in their reactions.
+### Datasets
+- **GTEx V11:** Human liver gene-expression data (median TPM values).
+- **Human-GEM v1.19.0:** Human genome-scale metabolic model.
 
-## 4. Data Used
-
-### Gene-expression data
-
-- Source: GTEx Portal
-- Version: V11
-- Data type: Gene median TPM
-- Tissue selected: Liver
-
-### Metabolic model
-
-- Model: Human-GEM
-- Version: 1.19.0
-- File format: SBML (XML)
-
-The GTEx dataset provides gene-expression values, while Human-GEM provides the metabolic reactions and their relationships with genes.
-
-## 5. Methodology
-
-I followed these steps to complete the project:
-
-1. Loaded the GTEx gene-expression dataset and selected the liver tissue data.
-2. Loaded the Human-GEM metabolic model.
-3. Matched the gene IDs from GTEx with the gene IDs present in Human-GEM.
-4. Divided the genes into low, intermediate and high expression groups.
-5. Assigned weights to the genes:
-   - Low expression = -1
-   - Intermediate expression = 0
-   - High expression = +1
-6. Converted the gene weights into reaction weights using gene-protein-reaction relationships.
-7. Prepared the iMAT optimisation model.
-8. Used SCIP to solve the optimisation problem.
-9. Extracted the predicted reaction fluxes.
-10. Checked whether the predicted fluxes followed the reaction boundaries and mass-balance conditions.
-11. Compared the results from the two thresholds.
-
-### Threshold comparison
-
-I used two different settings:
-
-- **10% threshold:** 10th and 90th percentiles.
-- **15% threshold:** 15th and 85th percentiles.
-
-This comparison helped me understand how different expression cutoffs can change the reaction predictions.
-
-## 6. Software and Tools Used
-
-- Python
-- Google Colab
-- COBRApy
+### Tools and Libraries
+- Python 3.11
 - iMATpy
-- PySCIPOpt
-- SCIP
+- COBRApy
+- PySCIPOpt / SCIP
 - Pandas
 - NumPy
 - Matplotlib
 
-## 7. Results and Observations
+## 4. Methodology
 
-### Reaction classification
+The project follows these main steps:
 
-After converting the gene-expression values into reaction weights, the following reaction counts were obtained:
+1. **Data preparation:** GTEx liver gene-expression data is loaded and processed. Version numbers are removed from Ensembl gene IDs to allow matching with the metabolic model.
+2. **Gene matching:** GTEx gene IDs are matched with the genes present in Human-GEM.
+3. **Gene classification:** Genes are classified into high, low, and intermediate expression groups using 10% and 15% expression thresholds.
+4. **Reaction mapping:** Gene-expression information is mapped to metabolic reactions using the gene-reaction rules in Human-GEM.
+5. **iMAT optimisation:** The iMAT method integrates gene-expression information with the metabolic network to predict reaction activity.
+6. **Flux analysis:** Predicted reaction fluxes are extracted and compared between the two threshold settings.
+7. **Validation:** Flux bounds and mass-balance constraints are checked to assess the validity of the predicted solutions.
 
-| Reaction category | 10% threshold | 15% threshold |
+## 5. Results
+
+### Gene Matching
+
+- Total unique GTEx genes: 74,628
+- Total Human-GEM genes: 2,887
+- Matched genes: 2,877
+- Unmatched genes: 10
+- Gene matching percentage: 99.65%
+
+### Reaction Classification
+
+A total of 12,971 reactions were analysed.
+
+| Reaction classification | 10% threshold | 15% threshold |
 |---|---:|---:|
-| Low (-1) | 214 | 313 |
+| Low expression (-1) | 214 | 313 |
 | Intermediate (0) | 10,619 | 9,576 |
-| High (+1) | 2,138 | 3,082 |
+| High expression (+1) | 2,138 | 3,082 |
 | **Total** | **12,971** | **12,971** |
 
-From this comparison, I observed that the number of high- and low-expression reactions changed when the threshold was changed.
+### Optimisation Results
 
-### Optimisation results
-
-| Metric | 10% threshold | 15% threshold |
+| Parameter | 10% threshold | 15% threshold |
 |---|---:|---:|
 | Best objective value | 2,053 | 3,021 |
-| Solver status | Optimal | Time limit |
-| Feasible solutions found | 100 | 100 |
-| Optimality gap | 0.0 | 0.1324% |
+| Solver status | Optimal | Time limit reached |
+| Feasible solutions | 100 | 100 |
+| Optimality gap | 0% | 0.1324% |
 
-The 10% model reached an optimal solution. The 15% model found a feasible solution within the given time, but the solver did not prove that it was globally optimal.
+The 10% model reached an optimal solution. The 15% model reached a feasible solution with a small optimality gap, but optimality was not proven within the time limit.
 
-### Flux comparison
+### Flux Comparison
 
-The predicted fluxes from both threshold settings were compared.
+The flux distributions from the two threshold settings were compared.
 
 - Total reactions compared: 12,971
 - Reactions with changed flux: 4,628
 - Reactions with direction changes: 374
 - Mean absolute flux difference: 73.12
 
-This shows that changing the gene-expression threshold can affect the predicted metabolic flux distribution.
-
-### Flux validation
-
-I also checked whether the predicted fluxes satisfied the model constraints.
-
-| Validation metric | 10% threshold | 15% threshold |
-|---|---:|---:|
-| Bound violations | 0 | 0 |
-| Maximum mass-balance residual | 7.09 × 10⁻¹² | 1.03 × 10⁻¹⁰ |
-| Metabolites with residual above 10⁻⁶ | 0 | 0 |
+### Model Validation
 
 Both models passed the flux-bound and mass-balance checks.
 
-### Visualisations
+- No flux-bound violations were detected.
+- Maximum mass-balance residual for the 10% model: 7.09 × 10⁻¹²
+- Maximum mass-balance residual for the 15% model: 1.03 × 10⁻¹⁰
 
-The `results` folder contains the following visualisations:
+## 6. Conclusion
 
-- Flux comparison between the 10% and 15% models.
-- Distribution of differences in reaction fluxes.
-- Distribution of changing reactions across metabolic subsystems.
+The results demonstrate how liver gene-expression information can be integrated with a genome-scale metabolic model using iMAT. The comparison between 10% and 15% thresholds shows that the choice of expression threshold affects reaction classification and predicted flux distributions.
 
-These plots help in understanding how the two threshold settings affect the model predictions.
+The analysis provides a computational prediction of liver-specific metabolic activity. These predictions should not be treated as direct measurements of actual metabolic rates.
 
-## 8. Project Folder Structure
+## 7. Project Structure
 
 ```text
 iMAT-Human-Tissue-Project/
 │
 ├── data/
-│   ├── GTEx gene-expression dataset
-│   └── Human-GEM.xml (download separately)
+│   └── GTEx gene-expression dataset
 │
 ├── notebooks/
 │   └── iMAT_Human_Tissue_Project.ipynb
 │
 ├── results/
-│   ├── liver_iMAT_fluxes_10.csv
-│   ├── liver_iMAT_fluxes_15.csv
-│   ├── liver_iMAT_validation_10.csv
-│   ├── liver_iMAT_validation_15.csv
-│   ├── iMAT_sensitivity_comparison.csv
-│   ├── iMAT_flux_comparison_10_vs_15.csv
-│   └── Visualisation files
+│   ├── Gene weights
+│   ├── Reaction weights
+│   ├── Flux results
+│   ├── Validation results
+│   └── Visualisations
 │
 ├── scripts/
 │   ├── check_gene_matching.py
@@ -168,11 +118,11 @@ iMAT-Human-Tissue-Project/
 │   └── test_data.py
 │
 ├── .gitignore
-├── README.md
-└── requirements.txt
+├── requirements.txt
+└── README.md
 ```
 
-## 9. How to Run the Project
+## 8. Installation and Reproducibility
 
 ### Step 1: Clone the repository
 
@@ -181,47 +131,50 @@ git clone https://github.com/sridevir872-cloud/iMAT-Human-Tissue-Project.git
 cd iMAT-Human-Tissue-Project
 ```
 
-### Step 2: Install the required libraries
+### Step 2: Install the required packages
 
 ```bash
 pip install -r requirements.txt
 ```
 
-### Step 3: Download the data
+### Step 3: Download the datasets
 
 ```bash
 python scripts/download_data.py
 ```
 
-This script downloads the required input files, including the Human-GEM model, if they are not already available.
+The download script retrieves the Human-GEM model and checks for the GTEx dataset.
 
-### Step 4: Run the analysis
+### Step 4: Check the datasets
 
-Open the notebook:
+```bash
+python scripts/test_data.py
+```
 
-`notebooks/iMAT_Human_Tissue_Project.ipynb`
+### Step 5: Check gene matching
 
-The main analysis was performed using Google Colab. SCIP was used through PySCIPOpt to solve the optimisation problem.
+```bash
+python scripts/check_gene_matching.py
+```
 
-The notebook contains the analysis steps and the results obtained from both threshold settings.
+### Step 6: Prepare gene and reaction weights
 
-## 10. Limitations
+```bash
+python scripts/prepare_imat.py
+```
 
-There are a few limitations in this project:
+**Note:** The main iMAT optimisation was performed in Google Colab using the SCIP solver. The `run_imat.py` script is included in the repository, but the full optimisation may require a suitable solver and sufficient computational resources.
 
-- The predicted fluxes are computer-based predictions and are not actual experimental measurements.
-- Changing the gene-expression threshold can change the predicted results.
-- Gene expression does not always directly represent the actual activity of an enzyme.
-- The 15% model reached a feasible solution, but global optimality was not proven within the time limit.
-- Some reactions showed fluxes close to their allowed boundaries, so these predictions should be interpreted carefully.
-- More experimental data would help in checking the predicted metabolic activities.
+## 9. Limitations
 
-## 11. Reference
+- Gene expression does not always directly represent enzyme activity.
+- The predicted flux values are computational estimates, not experimentally measured rates.
+- Different expression thresholds can produce different metabolic predictions.
+- The 15% optimisation reached the time limit before proving optimality.
+- Experimental data would be required for further biological validation.
 
-Shlomi, T., Cabili, M. N., Herrgård, M. J., Palsson, B. Ø., & Ruppin, E. (2008).
+## 10. Reference
 
-*Network-based prediction of human tissue-specific metabolism.*
-
-Nature Biotechnology, 26, 1003–1010.
+Shlomi, T., et al. (2008). Network-based prediction of human tissue-specific metabolism. *Nature Biotechnology*, 26, 1003–1010.
 
 https://doi.org/10.1038/nbt.1487
