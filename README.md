@@ -122,50 +122,10 @@ iMAT-Human-Tissue-Project/
 └── README.md
 ```
 
-## 8. Installation and Reproducibility
 
-### Step 1: Clone the repository
 
-```bash
-git clone https://github.com/sridevir872-cloud/iMAT-Human-Tissue-Project.git
-cd iMAT-Human-Tissue-Project
-```
 
-### Step 2: Install the required packages
-
-```bash
-pip install -r requirements.txt
-```
-
-### Step 3: Download the datasets
-
-```bash
-python scripts/download_data.py
-```
-
-The download script retrieves the Human-GEM model and checks for the GTEx dataset.
-
-### Step 4: Check the datasets
-
-```bash
-python scripts/test_data.py
-```
-
-### Step 5: Check gene matching
-
-```bash
-python scripts/check_gene_matching.py
-```
-
-### Step 6: Prepare gene and reaction weights
-
-```bash
-python scripts/prepare_imat.py
-```
-
-**Note:** The main iMAT optimisation was performed in Google Colab using the SCIP solver. The `run_imat.py` script is included in the repository, but the full optimisation may require a suitable solver and sufficient computational resources.
-
-## 9. Limitations
+## 8. Limitations
 
 - Gene expression does not always directly represent enzyme activity.
 - The predicted flux values are computational estimates, not experimentally measured rates.
@@ -173,7 +133,7 @@ python scripts/prepare_imat.py
 - The 15% optimisation reached the time limit before proving optimality.
 - Experimental data would be required for further biological validation.
 
-## 10. Reference
+## 9. Reference
 
 Shlomi, T., et al. (2008). Network-based prediction of human tissue-specific metabolism. *Nature Biotechnology*, 26, 1003–1010.
 
