@@ -92,40 +92,7 @@ The results demonstrate how liver gene-expression information can be integrated 
 
 The analysis provides a computational prediction of liver-specific metabolic activity. These predictions should not be treated as direct measurements of actual metabolic rates.
 
-## 7. Project Structure
-
-```text
-iMAT-Human-Tissue-Project/
-│
-├── data/
-│   └── GTEx gene-expression dataset
-│
-├── notebooks/
-│   └── iMAT_Human_Tissue_Project.ipynb
-│
-├── results/
-│   ├── Gene weights
-│   ├── Reaction weights
-│   ├── Flux results
-│   ├── Validation results
-│   └── Visualisations
-│
-├── scripts/
-│   ├── check_gene_matching.py
-│   ├── download_data.py
-│   ├── prepare_imat.py
-│   ├── run_imat.py
-│   └── test_data.py
-│
-├── .gitignore
-├── requirements.txt
-└── README.md
-```
-
-
-
-
-## 8. Limitations
+## 7. Limitations
 
 - Gene expression does not always directly represent enzyme activity.
 - The predicted flux values are computational estimates, not experimentally measured rates.
@@ -133,7 +100,7 @@ iMAT-Human-Tissue-Project/
 - The 15% optimisation reached the time limit before proving optimality.
 - Experimental data would be required for further biological validation.
 
-## 9. Reference
+## 8. Reference
 
 Shlomi, T., et al. (2008). Network-based prediction of human tissue-specific metabolism. *Nature Biotechnology*, 26, 1003–1010.
 
