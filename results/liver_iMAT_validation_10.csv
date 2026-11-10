@@ -1,0 +1,2 @@
+Threshold,Solver_Status,Objective_Value,Optimality_Gap,Total_Reactions,Bound_Violations,Maximum_Mass_Balance_Residual,Imbalanced_Metabolites
+10%,optimal,2053.0,0.0,12971,0,7.091120743270014e-12,0

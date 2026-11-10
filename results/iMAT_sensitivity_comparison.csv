@@ -1,0 +1,11 @@
+Metric,15_percent,10_percent
+Gene-expression threshold,15%,10%
+High-expression reactions,3082,2138
+Low-expression reactions,313,214
+Intermediate reactions,9576,10619
+iMAT objective value,3021,2053
+Solver optimality gap,0.001324,0.0
+Reactions with changed flux,Reference,4628
+Reactions with direction changes,Reference,374
+Upper-bound hits,317,84
+Lower-bound hits,6406,6664

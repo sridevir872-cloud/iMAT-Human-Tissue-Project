@@ -1,0 +1,9 @@
+Metric,Value
+SCIP status,timelimit
+Best objective,3021.000000000001
+Optimality gap,0.0013240519696425398
+Solutions found,100
+Total reactions,12971
+Flux bound violations,0
+Maximum mass balance residual,1.0314238352293614e-10
+Metabolites above tolerance,0

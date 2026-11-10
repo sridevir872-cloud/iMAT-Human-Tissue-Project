@@ -1,0 +1,10 @@
+Measurement,Count
+High-expression reactions,3082
+Positive indicators selected,2182
+Negative indicators selected,539
+Both directions selected,0
+Neither direction selected,361
+Low-expression reactions,313
+Low indicators selected,300
+Low indicators not selected,13
+Best SCIP objective,3021
